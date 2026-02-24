@@ -8,11 +8,11 @@ Form validation enforced only on the client side (HTML `<select>` options); the 
 
 1. Navigate to `http://<VM_IP>/index.php?page=survey`.
 2. The form presents a dropdown of grades (1–10).
-3. Submit a POST request with an out-of-range value using `survey.py`:
+3. Submit a POST request with an out-of-range value using `exploit.py`:
    ```bash
-   python survey.py
+   python exploit.py
    ```
-   The script sends `sujet2=99` directly, bypassing the HTML dropdown constraint.
+   The script sends `sujet=3, valeur=11` directly, bypassing the HTML dropdown constraint.
 4. The server accepts the value and returns the flag.
 
 ## Why It Works

@@ -11,9 +11,9 @@ Access to a secret page is gated on client-supplied HTTP headers (`User-Agent` a
    ```
    http://<VM_IP>/index.php?page=b7e44c7a40c5f80139f0a50f3650fb2bd8d00b0d24667c4c2ca32c88e13b758f
    ```
-3. Send a request with the required headers using `req.py`:
+3. Send a request with the required headers using `exploit.py`:
    ```bash
-   python req.py
+   python exploit.py
    ```
    Headers sent:
    ```

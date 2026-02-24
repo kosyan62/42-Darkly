@@ -8,9 +8,9 @@ The upload endpoint validates only the MIME type (`Content-Type` header), not th
 
 1. Navigate to `http://<VM_IP>/index.php?page=upload`.
 2. The form accepts image uploads. Normal PHP files are rejected.
-3. Send a PHP file with `Content-Type: image/jpeg` using `send.py`:
+3. Send a PHP file with `Content-Type: image/jpeg` using `exploit.py`:
    ```bash
-   python send.py
+   python exploit.py
    ```
    The script POSTs `reverse.php` with the MIME type spoofed to `image/jpeg`.
 4. The server accepts the upload and saves the file to `/tmp/`.
