@@ -5,7 +5,7 @@ from lxml import etree
 
 
 def get_page(id_):
-    url = f"http://192.168.122.118/?page=member&id={id_}&Submit=Submit#"
+    url = f"http://192.168.122.213/?page=member&id={id_}&Submit=Submit#"
     r = requests.get(url)
     return r.text
 
@@ -50,3 +50,4 @@ if __name__ == "__main__":
     decrypted = decrypted.lower()
     sha256 = hashlib.sha256(decrypted.encode()).hexdigest()
     print(sha256)
+    # flag is 10a16d834f9b1e4068b25c4c46fe0284e99e44dceaf08098fc83925ba6310ff5
