@@ -6,7 +6,9 @@ from queue import Queue
 import requests
 from lxml import etree
 
-VM_IP = os.environ.get("VM_IP", "192.168.122.118")
+VM_IP = os.environ.get("VM_IP")
+if not VM_IP:
+    raise SystemExit("Error: VM_IP environment variable is not set. Usage: VM_IP=<ip> python brute_force.py")
 url = f"http://{VM_IP}:80"
 
 here = Path(__file__).parent

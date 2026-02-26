@@ -4,7 +4,9 @@ import os
 import requests
 from lxml import etree
 
-VM_IP = os.environ.get("VM_IP", "192.168.122.213")
+VM_IP = os.environ.get("VM_IP")
+if not VM_IP:
+    raise SystemExit("Error: VM_IP environment variable is not set. Usage: VM_IP=<ip> python enumerate.py")
 
 
 def inject(payload):

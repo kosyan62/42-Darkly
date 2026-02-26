@@ -75,7 +75,9 @@ async def crawl_readmes(
 
 
 async def main():
-    VM_IP = os.environ.get("VM_IP", "192.168.122.213")
+    VM_IP = os.environ.get("VM_IP")
+    if not VM_IP:
+        raise SystemExit("Error: VM_IP environment variable is not set. Usage: VM_IP=<ip> python hidden_path.py")
     base = f"http://{VM_IP}/.hidden/"
     print(f"Crawling {base} ...")
 
