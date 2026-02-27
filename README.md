@@ -49,10 +49,19 @@ VM_IP=192.168.x.x python <breach>/Resources/<script>.py
 
 ## Setup
 
+Target: i386 ISO running in a VM. IP displayed on boot. Access at `http://<VM_IP>/`.
+
 ```bash
-python -m venv .venv
-source .venv/activate
-pip install requests lxml aiohttp
+make setup                          # create venv, install dependencies
+make VM_IP=<ip> all                 # run all exploits
+make VM_IP=<ip> brute_force         # run a single exploit
+make help                           # list all targets
 ```
 
-Target: i386 ISO running in a VM. IP displayed on boot. Access at `http://<VM_IP>/`.
+Or manually:
+
+```bash
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+VM_IP=<ip> python brute_force/Resources/brute_force.py
+```
